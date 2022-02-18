@@ -10,4 +10,4 @@ poetry install
 poetry run uvicorn src.html:app --reload
 ```
 
-Then access the url: <http://localhost:8000/form>
+Then access the url: <http://localhost:8000/>
