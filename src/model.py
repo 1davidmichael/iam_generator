@@ -1,56 +1,19 @@
-def spell_number(num: int, multiply_by_2: bool = False):
-    d = {0: 'zero', 1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five',
-         6: 'six', 7: 'seven', 8: 'eight', 9: 'nine', 10: 'ten',
-         11: 'eleven', 12: 'twelve', 13: 'thirteen', 14: 'fourteen',
-         15: 'fifteen', 16: 'sixteen', 17: 'seventeen', 18: 'eighteen',
-         19: 'nineteen', 20: 'twenty',
-         30: 'thirty', 40: 'forty', 50: 'fifty', 60: 'sixty',
-         70: 'seventy', 80: 'eighty', 90: 'ninety'}
-    k = 1000
-    m = k * 1000
-    b = m * 1000
-    t = b * 1000
+from policy_sentry.util import arns
+from policy_sentry.writing.template import get_actions_template_dict
+from policy_sentry.command.write_policy import write_policy_with_template
+from policy_sentry.writing.template import get_crud_template_dict
+import json
 
-    assert (0 <= num)
+def generate_iam_policy(arn, type):
+    crud_template = get_crud_template_dict()
+    crud_template[type].append(arn)
 
-    if multiply_by_2:
-        num *= 2
+    policy = write_policy_with_template(crud_template)
 
-    if num < 20:
-        return d[num]
-
-    if num < 100:
-        if num % 10 == 0:
-            return d[num]
-        else:
-            return d[num // 10 * 10] + '-' + d[num % 10]
-
-    if num < k:
-        if num % 100 == 0:
-            return d[num // 100] + ' hundred'
-        else:
-            return d[num // 100] + ' hundred and ' + spell_number(num % 100)
-
-    if num < m:
-        if num % k == 0:
-            return spell_number(num // k) + ' thousand'
-        else:
-            return spell_number(num // k) + ' thousand, ' + spell_number(num % k)
-
-    if num < b:
-        if (num % m) == 0:
-            return spell_number(num // m) + ' million'
-        else:
-            return spell_number(num // m) + ' million, ' + spell_number(num % m)
-
-    if num < t:
-        if (num % b) == 0:
-            return spell_number(num // b) + ' billion'
-        else:
-            return spell_number(num // b) + ' billion, ' + spell_number(num % b)
-
-    if num % t == 0:
-        return spell_number(num // t) + ' trillion'
-    else:
-        return spell_number(num // t) + ' trillion, ' + spell_number(num % t)
-
+    response = {
+        "arn": arn,
+        "type": type,
+        "service": arns.get_service_from_arn(arn),
+        "policy": json.dumps(policy, indent=4)
+    }
+    return(response)

@@ -10,6 +10,7 @@ fastapi = "^0.74.0"
 uvicorn = "^0.17.5"
 Jinja2 = "^3.0.3"
 python-multipart = "^0.0.5"
+policy-sentry = "^0.12.2"
 
 [tool.poetry.dev-dependencies]
 

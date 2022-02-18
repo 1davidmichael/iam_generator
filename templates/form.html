@@ -6,11 +6,20 @@
 </head>
 <body>
 <form method="post">
-    <input type="number" name="num" value="1234"/>
+    <input type="text" name="arn" value="arn:aws:s3:::examplebucket"/>
+    <select name="type" id="type">
+        <option value="read">Read</option>
+        <option value="write">Write</option>
+    </select>
     <input type="submit">
 </form>
 
-<p>Result: {{ result }}</p>
+<p>Arn: {{ result.arn }}</p>
+<p>Type: {{ result.type }}</p>
+<p>Service: {{ result.service }}</p>
+<p>Policy: {{ result.policy }}</p>
+
+
 
 </body>
 </html>
